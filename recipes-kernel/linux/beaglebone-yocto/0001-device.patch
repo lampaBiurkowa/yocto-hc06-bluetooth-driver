@@ -1,0 +1,38 @@
+From: Your Name <your.email@example.com>
+Date: Sat, 22 May 2024 15:52:56 +0000
+Subject: [PATCH] Enable i2c in am335x-bonegreen.dts
+
+Upstream-Status: Inappropriate [local configuration]
+---
+diff --git a/am335x-bonegreen.orig.dts b/am335x-bonegreen.dts
+index ab7fc30..1077e8b 100644
+--- a/arch/arm/boot/dts/am335x-bonegreen.dts
++++ b/arch/arm/boot/dts/am335x-bonegreen.dts
+@@ -10,5 +10,25 @@
+ 
+ / {
+ 	model = "TI AM335x BeagleBone Green";
+-	compatible = "ti,am335x-bone-green", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
++	compatible = "ti,am335x-bone-green", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";	
++};
++
++&am33xx_pinmux {
++	custom_uart: custom_uart {
++        pinctrl-single,pins = <
++            AM33XX_PADCONF(AM335X_PIN_UART1_RXD, PIN_INPUT_PULLUP, MUX_MODE0)
++            AM33XX_PADCONF(AM335X_PIN_UART1_TXD, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
++        >;
++    };
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&custom_uart>;
++	status = "okay";
++
++	fake_device {
++		compatible = "hc-06,mocne";
++		status = "okay";
++	};
+ };
+\ No newline at end of file
